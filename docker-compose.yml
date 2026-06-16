@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: recruit-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: recruit
+      MYSQL_USER: recruit
+      MYSQL_PASSWORD: recruit123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./recruit-service
+      dockerfile: Dockerfile
+    container_name: recruit-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:Rk1nYWp6YU1hS1dOYXNkZmFzZGZhc2RmYXNkZmFzZGY=
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: recruit
+      DB_USERNAME: recruit
+      DB_PASSWORD: recruit123
+      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:5173,localhost:8000,127.0.0.1,127.0.0.1:8000,127.0.0.1:5173
+      SESSION_DRIVER: cookie
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./recruit-service:/var/www/html
+      - vendor-volume:/var/www/html/vendor
+      - storage-volume:/var/www/html/storage
+    entrypoint: ["sh", "/var/www/html/entrypoint.sh"]
+
+  frontend:
+    build:
+      context: ./recruit-portal
+      dockerfile: Dockerfile
+    container_name: recruit-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./recruit-portal:/app
+      - node_modules-volume:/app/node_modules
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  mysql-data:
+  vendor-volume:
+  storage-volume:
+  node_modules-volume:
