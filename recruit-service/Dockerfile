@@ -13,7 +13,8 @@ RUN apk add --no-cache \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer create-project laravel/laravel /tmp/laravel-template --prefer-dist 11.* --no-interaction \
+RUN composer config --global policy.advisories.block false \
+    && composer create-project laravel/laravel /tmp/laravel-template --prefer-dist 11.* --no-interaction \
     && cd /tmp/laravel-template \
     && composer require laravel/sanctum "^4.0" --no-interaction \
     && composer install --optimize-autoloader --no-interaction
