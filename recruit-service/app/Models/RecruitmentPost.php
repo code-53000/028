@@ -14,6 +14,7 @@ class RecruitmentPost extends Model
         'description',
         'requirements',
         'benefits',
+        'position_type',
         'quota',
         'status',
         'deadline',
@@ -43,6 +44,6 @@ class RecruitmentPost extends Model
 
     public function isOpen()
     {
-        return $this->status === 'open' && (!$this->deadline || $this->deadline->isFuture());
+        return $this->status === 'published' && (!$this->deadline || $this->deadline->isFuture());
     }
 }

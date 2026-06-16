@@ -2,278 +2,296 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Club;
 use App\Models\RecruitmentPost;
 use App\Models\InterviewSlot;
 use App\Models\Application;
-use App\Models\InterviewResult;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->command->info('开始创建测试数据...');
+        $this->command->info('创建社团负责人账号...');
+        
+        $leader1 = User::firstOrCreate(
+            ['email' => 'leader1@example.com'],
+            [
+                'name' => '张社长',
+                'password' => Hash::make('password123'),
+                'phone' => '13800000001',
+                'role' => 'club_leader',
+                'student_id' => '2021001',
+                'major' => '计算机科学与技术',
+                'grade' => '2021级',
+                'bio' => '计算机协会会长，热爱编程和开源',
+            ]
+        );
 
-        $clubLeader1 = User::create([
-            'name' => '张三',
-            'email' => 'leader1@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13800138001',
-            'role' => 'club_leader',
-            'student_id' => '2021001001',
-            'major' => '计算机科学与技术',
-            'grade' => '大三',
-            'bio' => '计算机协会会长，热爱开源技术',
-        ]);
+        $leader2 = User::firstOrCreate(
+            ['email' => 'leader2@example.com'],
+            [
+                'name' => '李社长',
+                'password' => Hash::make('password123'),
+                'phone' => '13800000002',
+                'role' => 'club_leader',
+                'student_id' => '2021002',
+                'major' => '电子信息工程',
+                'grade' => '2021级',
+                'bio' => '电子科技协会会长，擅长嵌入式开发',
+            ]
+        );
 
-        $clubLeader2 = User::create([
-            'name' => '李四',
-            'email' => 'leader2@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13800138002',
-            'role' => 'club_leader',
-            'student_id' => '2021002001',
-            'major' => '电子工程',
-            'grade' => '大三',
-            'bio' => '电子科技协会副会长',
-        ]);
+        $leader3 = User::firstOrCreate(
+            ['email' => 'leader3@example.com'],
+            [
+                'name' => '王社长',
+                'password' => Hash::make('password123'),
+                'phone' => '13800000003',
+                'role' => 'club_leader',
+                'student_id' => '2021003',
+                'major' => '工商管理',
+                'grade' => '2021级',
+                'bio' => '创业协会会长，拥有丰富的创业经验',
+            ]
+        );
 
-        $clubLeader3 = User::create([
-            'name' => '王五',
-            'email' => 'leader3@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13800138003',
-            'role' => 'club_leader',
-            'student_id' => '2021003001',
-            'major' => '市场营销',
-            'grade' => '大四',
-            'bio' => '创业协会创始人',
-        ]);
+        $this->command->info('创建学生账号...');
 
-        $student1 = User::create([
-            'name' => '小明',
-            'email' => 'student1@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13900139001',
-            'role' => 'student',
-            'student_id' => '2023001001',
-            'major' => '软件工程',
-            'grade' => '大一',
-            'bio' => '热爱编程，希望加入技术社团学习',
-        ]);
+        $students = [];
+        $studentData = [
+            ['name' => '小明', 'email' => 'student1@example.com', 'student_id' => '2024001', 'major' => '计算机科学与技术', 'grade' => '2024级'],
+            ['name' => '小红', 'email' => 'student2@example.com', 'student_id' => '2024002', 'major' => '软件工程', 'grade' => '2024级'],
+            ['name' => '小刚', 'email' => 'student3@example.com', 'student_id' => '2024003', 'major' => '电子信息工程', 'grade' => '2024级'],
+            ['name' => '小丽', 'email' => 'student4@example.com', 'student_id' => '2024004', 'major' => '市场营销', 'grade' => '2024级'],
+        ];
 
-        $student2 = User::create([
-            'name' => '小红',
-            'email' => 'student2@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13900139002',
-            'role' => 'student',
-            'student_id' => '2023001002',
-            'major' => '计算机科学与技术',
-            'grade' => '大一',
-            'bio' => '喜欢前端开发和UI设计',
-        ]);
+        foreach ($studentData as $i => $data) {
+            $students[] = User::firstOrCreate(
+                ['email' => $data['email']],
+                array_merge($data, [
+                    'password' => Hash::make('password123'),
+                    'phone' => '1390000000' . ($i + 1),
+                    'role' => 'student',
+                    'bio' => '热爱学习的新生一枚~',
+                ])
+            );
+        }
 
-        $student3 = User::create([
-            'name' => '小刚',
-            'email' => 'student3@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13900139003',
-            'role' => 'student',
-            'student_id' => '2022002001',
-            'major' => '电子信息工程',
-            'grade' => '大二',
-            'bio' => '对嵌入式开发感兴趣',
-        ]);
+        $this->command->info('创建社团...');
 
-        $student4 = User::create([
-            'name' => '小丽',
-            'email' => 'student4@example.com',
-            'password' => Hash::make('password123'),
-            'phone' => '13900139004',
-            'role' => 'student',
-            'student_id' => '2022003001',
-            'major' => '工商管理',
-            'grade' => '大二',
-            'bio' => '对创业和商业感兴趣',
-        ]);
+        $club1 = Club::firstOrCreate(
+            ['name' => '计算机协会'],
+            [
+                'description' => '计算机协会是一个致力于推广计算机技术、培养编程人才的学术科技类社团。我们定期举办编程讲座、技术沙龙、编程竞赛等活动，为热爱技术的同学提供交流和成长的平台。',
+                'category' => '学术科技',
+                'logo' => null,
+                'contact_email' => 'cs_club@university.edu',
+                'contact_phone' => '13800000001',
+                'member_count' => 120,
+            ]
+        );
 
-        $club1 = Club::create([
-            'name' => '计算机协会',
-            'logo' => null,
-            'description' => '计算机协会是一个面向全校计算机爱好者的学生社团，致力于推广计算机技术，培养同学们的编程能力和创新思维。我们定期举办技术分享会、编程比赛、项目实践等活动。',
-            'category' => '学术科技',
-            'member_count' => 120,
-            'is_active' => true,
-        ]);
-        $club1->members()->attach($clubLeader1->id, ['role' => 'leader']);
+        $club2 = Club::firstOrCreate(
+            ['name' => '电子科技协会'],
+            [
+                'description' => '电子科技协会专注于嵌入式开发、机器人制作、电子设计等领域。协会拥有完善的电子实验室，配备示波器、信号发生器等专业设备，欢迎对电子制作感兴趣的同学加入！',
+                'category' => '学术科技',
+                'logo' => null,
+                'contact_email' => 'ee_club@university.edu',
+                'contact_phone' => '13800000002',
+                'member_count' => 85,
+            ]
+        );
 
-        $club2 = Club::create([
-            'name' => '电子科技协会',
-            'logo' => null,
-            'description' => '电子科技协会专注于电子设计、嵌入式系统和物联网技术。协会拥有完整的实验室设备，成员多次在全国电子设计大赛中获奖。',
-            'category' => '学术科技',
-            'member_count' => 85,
-            'is_active' => true,
-        ]);
-        $club2->members()->attach($clubLeader2->id, ['role' => 'leader']);
+        $club3 = Club::firstOrCreate(
+            ['name' => '创业协会'],
+            [
+                'description' => '创业协会是一个培养创业意识、提升创业能力的实践类社团。我们与多家企业合作，定期举办创业讲座、商业计划大赛、企业参访等活动，助力每一位有创业梦想的同学！',
+                'category' => '社会实践',
+                'logo' => null,
+                'contact_email' => 'startup_club@university.edu',
+                'contact_phone' => '13800000003',
+                'member_count' => 95,
+            ]
+        );
 
-        $club3 = Club::create([
-            'name' => '创业协会',
-            'logo' => null,
-            'description' => '创业协会为有志于创业的同学提供交流平台和资源支持。我们与多家创业孵化器合作，定期举办创业沙龙、路演活动和创业培训课程。',
-            'category' => '实践创业',
-            'member_count' => 65,
-            'is_active' => true,
-        ]);
-        $club3->members()->attach($clubLeader3->id, ['role' => 'leader']);
+        $club1->leaders()->syncWithoutDetaching([$leader1->id => ['role' => 'president']]);
+        $club2->leaders()->syncWithoutDetaching([$leader2->id => ['role' => 'president']]);
+        $club3->leaders()->syncWithoutDetaching([$leader3->id => ['role' => 'president']]);
 
-        $post1 = RecruitmentPost::create([
-            'club_id' => $club1->id,
-            'title' => '技术部干事',
-            'description' => '参与协会技术项目开发，负责技术分享会筹备，学习和实践前沿技术。',
-            'requirements' => "1. 对编程有浓厚兴趣\n2. 至少掌握一门编程语言\n3. 有较强的学习能力和团队协作精神",
-            'benefits' => "1. 系统的技术培训\n2. 真实项目实践经验\n3. 学长学姐一对一指导\n4. 丰富的社团活动",
-            'quota' => 15,
-            'status' => 'open',
-            'deadline' => Carbon::now()->addDays(30),
-        ]);
+        $this->command->info('创建招新岗位...');
 
-        $post2 = RecruitmentPost::create([
-            'club_id' => $club1->id,
-            'title' => '宣传部干事',
-            'description' => '负责协会活动宣传、公众号运营、海报设计等工作。',
-            'requirements' => "1. 有一定的文字功底或设计能力\n2. 熟练使用 Office 软件\n3. 有公众号运营经验者优先",
-            'benefits' => "1. 新媒体运营技能培训\n2. 设计软件使用教学\n3. 锻炼沟通协调能力",
-            'quota' => 8,
-            'status' => 'open',
-            'deadline' => Carbon::now()->addDays(30),
-        ]);
+        $post1 = RecruitmentPost::firstOrCreate(
+            ['club_id' => $club1->id, 'title' => '后端开发工程师'],
+            [
+                'description' => '负责协会项目的后端开发工作，使用 PHP/Laravel、Node.js 等技术栈。',
+                'requirements' => '1. 熟悉至少一门后端编程语言（PHP/Java/Python/Node.js等）
+2. 了解 MySQL、Redis 等数据库
+3. 有良好的代码规范意识
+4. 有实际项目经验者优先',
+                'benefits' => '1. 参与真实项目开发，积累实战经验
+2. 获得学长学姐的技术指导
+3. 优先推荐实习机会
+4. 丰厚的社团福利',
+                'deadline' => Carbon::now()->addDays(30),
+                'status' => 'published',
+                'position_type' => '技术岗',
+            ]
+        );
 
-        $post3 = RecruitmentPost::create([
-            'club_id' => $club2->id,
-            'title' => '硬件开发部成员',
-            'description' => '参与电子设计项目，学习PCB设计、单片机开发等技能。',
-            'requirements' => "1. 对电子技术有兴趣\n2. 了解基础电路知识\n3. 动手能力强",
-            'benefits' => "1. 专业实验室使用权限\n2. 学长学姐技术指导\n3. 参加电子设计大赛机会",
-            'quota' => 10,
-            'status' => 'open',
-            'deadline' => Carbon::now()->addDays(25),
-        ]);
+        $post2 = RecruitmentPost::firstOrCreate(
+            ['club_id' => $club1->id, 'title' => '前端开发工程师'],
+            [
+                'description' => '负责协会项目的前端开发工作，使用 Vue3、React 等现代前端框架。',
+                'requirements' => '1. 熟悉 HTML、CSS、JavaScript
+2. 了解至少一个前端框架（Vue/React 等）
+3. 有良好的审美和用户体验意识
+4. 有 UI/UX 经验者优先',
+                'benefits' => '1. 参与真实项目开发，积累实战经验
+2. 获得学长学姐的技术指导
+3. 优先推荐实习机会',
+                'deadline' => Carbon::now()->addDays(30),
+                'status' => 'published',
+                'position_type' => '技术岗',
+            ]
+        );
 
-        $post4 = RecruitmentPost::create([
-            'club_id' => $club3->id,
-            'title' => '项目孵化部成员',
-            'description' => '参与创业项目筛选、孵化跟踪、资源对接等工作。',
-            'requirements' => "1. 对创业有热情\n2. 有良好的沟通能力\n3. 有创业想法或项目经验者优先",
-            'benefits' => "1. 与创业者面对面交流\n2. 创业知识系统培训\n3. 优质项目实习机会",
-            'quota' => 12,
-            'status' => 'open',
-            'deadline' => Carbon::now()->addDays(20),
-        ]);
+        $post3 = RecruitmentPost::firstOrCreate(
+            ['club_id' => $club2->id, 'title' => '嵌入式开发工程师'],
+            [
+                'description' => '负责机器人、智能小车等项目的嵌入式开发工作。',
+                'requirements' => '1. 了解 C/C++ 编程语言
+2. 有 51 单片机或 STM32 开发经验
+3. 了解基本的电路知识
+4. 动手能力强，有电子制作经验者优先',
+                'benefits' => '1. 免费使用协会实验室
+2. 参与各类电子设计竞赛
+3. 获得专业老师指导',
+                'deadline' => Carbon::now()->addDays(30),
+                'status' => 'published',
+                'position_type' => '技术岗',
+            ]
+        );
+
+        $post4 = RecruitmentPost::firstOrCreate(
+            ['club_id' => $club3->id, 'title' => '项目策划专员'],
+            [
+                'description' => '负责协会活动策划、商业计划书撰写等工作。',
+                'requirements' => '1. 有良好的文字功底和沟通能力
+2. 思维活跃，有创新意识
+3. 了解基本的商业知识
+4. 有社团或学生组织工作经验者优先',
+                'benefits' => '1. 参与创业项目策划
+2. 接触优秀创业者
+3. 提升商业思维能力',
+                'deadline' => Carbon::now()->addDays(30),
+                'status' => 'published',
+                'position_type' => '策划岗',
+            ]
+        );
+
+        $this->command->info('创建面试时段...');
 
         $baseDate = Carbon::now()->addDays(7);
 
-        $slot1 = InterviewSlot::create([
-            'recruitment_post_id' => $post1->id,
-            'club_id' => $club1->id,
-            'start_time' => $baseDate->copy()->hour(14)->minute(0),
-            'end_time' => $baseDate->copy()->hour(14)->minute(30),
-            'location' => '计算机学院楼 302 室',
-            'capacity' => 5,
-            'booked_count' => 0,
-            'status' => 'open',
-            'notes' => '请提前10分钟到达',
-        ]);
+        $slots = [
+            [
+                'recruitment_post_id' => $post1->id,
+                'club_id' => $club1->id,
+                'start_time' => $baseDate->copy()->setHour(14)->setMinute(0),
+                'end_time' => $baseDate->copy()->setHour(15)->setMinute(0),
+                'location' => '计算机楼 A301',
+                'capacity' => 5,
+                'status' => 'open',
+            ],
+            [
+                'recruitment_post_id' => $post1->id,
+                'club_id' => $club1->id,
+                'start_time' => $baseDate->copy()->setHour(16)->setMinute(0),
+                'end_time' => $baseDate->copy()->setHour(17)->setMinute(0),
+                'location' => '计算机楼 A301',
+                'capacity' => 5,
+                'status' => 'open',
+            ],
+            [
+                'recruitment_post_id' => $post2->id,
+                'club_id' => $club1->id,
+                'start_time' => $baseDate->copy()->setHour(15)->setMinute(0),
+                'end_time' => $baseDate->copy()->setHour(16)->setMinute(0),
+                'location' => '计算机楼 A302',
+                'capacity' => 5,
+                'status' => 'open',
+            ],
+            [
+                'recruitment_post_id' => $post3->id,
+                'club_id' => $club2->id,
+                'start_time' => $baseDate->copy()->addDay()->setHour(14)->setMinute(0),
+                'end_time' => $baseDate->copy()->addDay()->setHour(16)->setMinute(0),
+                'location' => '电子楼 B201',
+                'capacity' => 8,
+                'status' => 'open',
+            ],
+            [
+                'recruitment_post_id' => $post4->id,
+                'club_id' => $club3->id,
+                'start_time' => $baseDate->copy()->addDays(2)->setHour(19)->setMinute(0),
+                'end_time' => $baseDate->copy()->addDays(2)->setHour(21)->setMinute(0),
+                'location' => '创业楼 C101',
+                'capacity' => 10,
+                'status' => 'open',
+            ],
+        ];
 
-        $slot2 = InterviewSlot::create([
-            'recruitment_post_id' => $post1->id,
-            'club_id' => $club1->id,
-            'start_time' => $baseDate->copy()->hour(15)->minute(0),
-            'end_time' => $baseDate->copy()->hour(15)->minute(30),
-            'location' => '计算机学院楼 302 室',
-            'capacity' => 5,
-            'booked_count' => 0,
-            'status' => 'open',
-            'notes' => '请提前10分钟到达',
-        ]);
+        foreach ($slots as $slotData) {
+            InterviewSlot::firstOrCreate(
+                [
+                    'recruitment_post_id' => $slotData['recruitment_post_id'],
+                    'start_time' => $slotData['start_time'],
+                ],
+                $slotData
+            );
+        }
 
-        $slot3 = InterviewSlot::create([
-            'recruitment_post_id' => $post1->id,
-            'club_id' => $club1->id,
-            'start_time' => $baseDate->copy()->addDay()->hour(14)->minute(0),
-            'end_time' => $baseDate->copy()->addDay()->hour(14)->minute(30),
-            'location' => '计算机学院楼 302 室',
-            'capacity' => 5,
-            'booked_count' => 0,
-            'status' => 'open',
-            'notes' => '请提前10分钟到达',
-        ]);
+        $this->command->info('创建示例报名记录...');
 
-        $slot4 = InterviewSlot::create([
-            'recruitment_post_id' => $post3->id,
-            'club_id' => $club2->id,
-            'start_time' => $baseDate->copy()->hour(14)->minute(0),
-            'end_time' => $baseDate->copy()->hour(15)->minute(0),
-            'location' => '电子实验楼 201 室',
-            'capacity' => 8,
-            'booked_count' => 0,
-            'status' => 'open',
-            'notes' => '',
-        ]);
+        $app1 = Application::firstOrCreate(
+            ['user_id' => $students[0]->id, 'recruitment_post_id' => $post1->id],
+            [
+                'motivation' => '我非常喜欢后端开发，平时也自己做过一些小项目。希望能加入计算机协会，向学长学姐学习，参与真实项目开发。',
+                'experience' => '做过个人博客系统（Laravel）、在线Todo应用（Vue+Node.js）',
+                'skills' => 'PHP, Laravel, MySQL, JavaScript, Vue',
+                'status' => 'pending',
+            ]
+        );
 
-        $slot5 = InterviewSlot::create([
-            'recruitment_post_id' => $post4->id,
-            'club_id' => $club3->id,
-            'start_time' => $baseDate->copy()->addDays(2)->hour(19)->minute(0),
-            'end_time' => $baseDate->copy()->addDays(2)->hour(20)->minute(0),
-            'location' => '创业孵化基地 会议室A',
-            'capacity' => 10,
-            'booked_count' => 0,
-            'status' => 'open',
-            'notes' => '请准备1分钟自我介绍',
-        ]);
+        $app2 = Application::firstOrCreate(
+            ['user_id' => $students[1]->id, 'recruitment_post_id' => $post2->id],
+            [
+                'motivation' => '对前端开发很感兴趣，喜欢研究各种酷炫的交互效果。希望能在协会锻炼自己的技术能力。',
+                'experience' => '做过个人作品集网站、在线商城前端页面',
+                'skills' => 'HTML, CSS, JavaScript, Vue3, Element Plus',
+                'status' => 'reviewing',
+            ]
+        );
 
-        $app1 = Application::create([
-            'user_id' => $student1->id,
-            'recruitment_post_id' => $post1->id,
-            'motivation' => '我非常热爱编程，希望能在计算机协会学到更多技术知识，认识志同道合的朋友。',
-            'experience' => '自学过Python和C++，做过一些小项目',
-            'skills' => 'Python, C++, 基础算法',
-            'status' => 'pending',
-        ]);
+        $app3 = Application::firstOrCreate(
+            ['user_id' => $students[2]->id, 'recruitment_post_id' => $post3->id],
+            [
+                'motivation' => '从小就喜欢拆拆装装，对电子制作非常感兴趣。希望能加入电子科技协会，学习更多知识。',
+                'experience' => '高中时参加过机器人竞赛，做过简单的循迹小车',
+                'skills' => 'C语言, 51单片机, 基础电路设计',
+                'status' => 'pending',
+            ]
+        );
 
-        $app2 = Application::create([
-            'user_id' => $student2->id,
-            'recruitment_post_id' => $post1->id,
-            'motivation' => '对前端开发很感兴趣，希望加入技术部提升自己的能力。',
-            'experience' => '做过个人博客网站，熟悉HTML/CSS/JavaScript',
-            'skills' => 'HTML, CSS, JavaScript, Vue',
-            'status' => 'reviewing',
-        ]);
-
-        $app3 = Application::create([
-            'user_id' => $student3->id,
-            'recruitment_post_id' => $post3->id,
-            'motivation' => '一直对硬件开发很感兴趣，希望能加入电子科技协会系统学习。',
-            'experience' => '参加过高中机器人竞赛，有一定基础',
-            'skills' => 'C语言, 51单片机',
-            'status' => 'pending',
-        ]);
-
-        $this->command->info('测试数据创建完成！');
-        $this->command->info('');
-        $this->command->info('测试账号：');
-        $this->command->info('  社团负责人（计算机协会）: leader1@example.com / password123');
-        $this->command->info('  社团负责人（电子科技协会）: leader2@example.com / password123');
-        $this->command->info('  社团负责人（创业协会）: leader3@example.com / password123');
-        $this->command->info('  学生账号1: student1@example.com / password123');
-        $this->command->info('  学生账号2: student2@example.com / password123');
-        $this->command->info('  学生账号3: student3@example.com / password123');
-        $this->command->info('  学生账号4: student4@example.com / password123');
+        $this->command->info('数据库测试数据填充完成！');
+        $this->command->info('=== 测试账号 ===');
+        $this->command->info('社长账号：leader1/2/3@example.com / password123');
+        $this->command->info('学生账号：student1/2/3/4@example.com / password123');
+        $this->command->info('==============');
     }
 }

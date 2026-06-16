@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->text('description')->nullable();
             $table->string('category')->nullable();
+            $table->string('contact_email')->nullable();
+            $table->string('contact_phone')->nullable();
             $table->integer('member_count')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -23,7 +25,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('club_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('role', ['leader', 'vice_leader', 'member'])->default('member');
+            $table->enum('role', ['president', 'vice_leader', 'leader', 'member'])->default('member');
             $table->timestamps();
 
             $table->unique(['club_id', 'user_id']);

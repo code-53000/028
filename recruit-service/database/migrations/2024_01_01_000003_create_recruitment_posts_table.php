@@ -15,8 +15,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('requirements')->nullable();
             $table->text('benefits')->nullable();
+            $table->string('position_type')->nullable();
             $table->integer('quota')->default(0);
-            $table->enum('status', ['draft', 'open', 'closed'])->default('draft');
+            $table->enum('status', ['draft', 'published', 'closed'])->default('draft');
             $table->dateTime('deadline')->nullable();
             $table->timestamps();
         });
